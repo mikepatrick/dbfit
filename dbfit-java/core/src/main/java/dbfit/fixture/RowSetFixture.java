@@ -36,6 +36,18 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    }
 	}
 
+    public static class ExpectedDataColumn {
+        private String name;
+
+        public ExpectedDataColumn(String name) {
+            this.name = name;
+        }
+
+        public boolean isKey() {
+            return !name.endsWith("?");
+        }
+    }
+
     // if element not 0, fixture column -> result set column index
 	private String[] keyColumns;
 	protected void bind(Parse heads) {
@@ -44,10 +56,11 @@ public abstract class RowSetFixture extends ColumnFixture {
 		    keyColumns=new String[heads.size()];
 		     for (int i = 0; heads != null; i++, heads = heads.more) {
 	              String name=heads.text();
+                 ExpectedDataColumn expectedDataColumn = new ExpectedDataColumn(name);
 	              columnBindings[i] = new SymbolAccessQueryBinding();
                  DataColumn dataColumn = actualDataTable.getColumnNamed(name);
                  String columnName= dataColumn.getName();
-	              if (! name.endsWith("?"))
+	              if (expectedDataColumn.isKey())
 	            	  keyColumns[i]=columnName;
 	               columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
 	                				columnName,
