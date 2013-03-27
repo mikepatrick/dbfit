@@ -136,8 +136,9 @@ public abstract class RowSetFixture extends ColumnFixture {
 			}
 		}
 	}
-	@SuppressWarnings("unchecked")
-	protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException{
-		return Class.forName(col.getJavaClassName());
-	}
+
+    @SuppressWarnings("unchecked")
+    protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
+        return col.getJavaClassForColumn();
+    }
 }

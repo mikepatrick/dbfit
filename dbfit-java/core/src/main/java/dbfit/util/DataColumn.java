@@ -27,6 +27,11 @@ public class DataColumn {
 	public String getJavaClassName() {
 		return javaClassName;
 	}
+
+    public Class getJavaClassForColumn() throws ClassNotFoundException, SQLException {
+        return Class.forName(getJavaClassName());
+    }
+
 	public String getName() {
 		return name;
 	}
