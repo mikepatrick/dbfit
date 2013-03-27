@@ -12,20 +12,20 @@ public abstract class RowSetFixture extends ColumnFixture {
 	private DataRow currentActualDataRow;
 	
 	private class CurrentDataRowTypeAdapter extends TypeAdapter {
-	    public String key;
+	    public String columnName;
 	    @SuppressWarnings("unchecked")
-	    public CurrentDataRowTypeAdapter(String key, Class type) throws NoSuchMethodException {
+	    public CurrentDataRowTypeAdapter(String columnName, Class type) throws NoSuchMethodException {
 	    	this.fixture=RowSetFixture.this;
 	    	target = null;
 	        method = CurrentDataRowTypeAdapter.class.getMethod("get", new Class[] {});
 	        this.type = type;
-	        this.key = key;
+	        this.columnName = columnName;
 	    }
 	    public void set(Object value) throws Exception {
 	    	throw new UnsupportedOperationException("changing values in row sets is not supported");
 	    }
 	    public Object get() {
-	           return currentActualDataRow.get(key);
+	           return currentActualDataRow.get(columnName);
 	    }
 	    public Object invoke() throws IllegalAccessException {
 	        return get();
@@ -50,28 +50,28 @@ public abstract class RowSetFixture extends ColumnFixture {
 
     // if element not 0, fixture column -> result set column index
 	private String[] keyColumns;
-	protected void bind(Parse heads) {
-		try {
-		    columnBindings = new Binding[heads.size()];
-		    keyColumns=new String[heads.size()];
-		     for (int i = 0; heads != null; i++, heads = heads.more) {
-	              String name=heads.text();
-                 ExpectedDataColumn expectedDataColumn = new ExpectedDataColumn(name);
-	              columnBindings[i] = new SymbolAccessQueryBinding();
-                 DataColumn dataColumn = actualDataTable.getColumnNamed(name);
-                 String columnName= dataColumn.getName();
-	              if (expectedDataColumn.isKey())
-	            	  keyColumns[i]=columnName;
-	               columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
-	                				columnName,
-	                				getJavaClassForColumn(dataColumn)
-	                			);	          
-	         }
-		}
-		catch (Exception sqle){
-			exception(heads,sqle);
-		}
-	}
+
+    protected void bind(Parse heads) {
+        try {
+            columnBindings = new Binding[heads.size()];
+            keyColumns = new String[heads.size()];
+            for (int i = 0; heads != null; i++, heads = heads.more) {
+                String name = heads.text();
+                ExpectedDataColumn expectedDataColumn = new ExpectedDataColumn(name);
+                columnBindings[i] = new SymbolAccessQueryBinding();
+                DataColumn dataColumn = actualDataTable.getColumnNamed(name);
+                String columnName = dataColumn.getName();
+                if (expectedDataColumn.isKey())
+                    keyColumns[i] = columnName;
+                columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
+                        columnName,
+                        getJavaClassForColumn(dataColumn)
+                );
+            }
+        } catch (Exception sqle) {
+            exception(heads, sqle);
+        }
+    }
 
     protected abstract DataTable getActualDataTable() throws SQLException;
 	protected abstract boolean isOrdered();
