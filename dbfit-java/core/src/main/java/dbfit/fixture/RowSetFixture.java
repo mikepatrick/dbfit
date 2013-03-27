@@ -1,17 +1,15 @@
 package dbfit.fixture;
+import dbfit.util.*;
 import fit.*;
 
-import java.sql.*;
-import java.util.*;
-
-import dbfit.util.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class RowSetFixture extends ColumnFixture {
-    
-	private DataTable dt;
-	//private ResultSetMetaData rsmd;
-	private DataRow currentRow;
+	private DataTable actualDataTable;
+	private DataRow currentActualDataRow;
 	
 	private class CurrentDataRowTypeAdapter extends TypeAdapter {
 	    public String key;
@@ -27,7 +25,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    	throw new UnsupportedOperationException("changing values in row sets is not supported");
 	    }
 	    public Object get() {
-	           return currentRow.get(key);
+	           return currentActualDataRow.get(key);
 	    }
 	    public Object invoke() throws IllegalAccessException {
 	        return get();
@@ -40,8 +38,8 @@ public abstract class RowSetFixture extends ColumnFixture {
 	private int findColumn(String name) throws Exception{
 		//todo: implement non-key
 		String normalisedName=NameNormaliser.normaliseName(name);
-		for (int i=0; i<dt.getColumns().size(); i++){
-			String colName=dt.getColumns().get(i).getName();
+		for (int i=0; i< actualDataTable.getColumns().size(); i++){
+			String colName= actualDataTable.getColumns().get(i).getName();
 			if (normalisedName.equals(NameNormaliser.normaliseName(colName)))
 				return i;
 		}
@@ -57,12 +55,12 @@ public abstract class RowSetFixture extends ColumnFixture {
 	              String name=heads.text();
 	              columnBindings[i] = new SymbolAccessQueryBinding();
 	              int idx=findColumn(name);
-	              String columnName=dt.getColumns().get(idx).getName();
+	              String columnName= actualDataTable.getColumns().get(idx).getName();
 	              if (! name.endsWith("?"))
 	            	  keyColumns[i]=columnName;
 	               columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
 	                				columnName,
-	                				getJavaClassForColumn(dt.getColumns().get(idx))
+	                				getJavaClassForColumn(actualDataTable.getColumns().get(idx))
 	                			);	          
 	         }
 		}
@@ -70,12 +68,12 @@ public abstract class RowSetFixture extends ColumnFixture {
 			exception(heads,sqle);
 		}
 	}
-	protected abstract DataTable getDataTable() throws SQLException;
+	protected abstract DataTable getActualDataTable() throws SQLException;
 	protected abstract boolean isOrdered();
 	public void doRows(Parse rows)
 	{
 		try{
-			dt=getDataTable();
+			actualDataTable = getActualDataTable();
 			super.doRows(rows);
 			addSurplusRows(rows.last());
 		}
@@ -84,45 +82,51 @@ public abstract class RowSetFixture extends ColumnFixture {
 			exception(rows,sqle);
 		}
 	}
-	public void doRow(Parse row) {
-		try{
-			if (isOrdered()) 
-				currentRow=dt.findFirstUnprocessedRow();
-			else
-				currentRow=findMatchingRow(row);
-		super.doRow(row);
-		currentRow.markProcessed();
-		}
-		catch (NoMatchingRowFoundException e){
-			row.parts.addToBody(Fixture.gray(" missing"));
-			wrong(row);
-		}
-	}
+
+    public void doRow(Parse expectedDataRow) {
+        try {
+            if (isOrdered())
+                currentActualDataRow = actualDataTable.findFirstUnprocessedRow();
+            else
+                currentActualDataRow = findMatchingRow(expectedDataRow);
+            super.doRow(expectedDataRow);
+            currentActualDataRow.markProcessed();
+        } catch (NoMatchingRowFoundException e) {
+            expectedDataRow.parts.addToBody(Fixture.gray(" missing"));
+            wrong(expectedDataRow);
+        }
+    }
 
 	public DataRow findMatchingRow(Parse row) throws NoMatchingRowFoundException{
-		Parse columns=row.parts;
-		Map<String,Object> keyMap=new HashMap<String,Object>();
-		for (int i=0; i<keyColumns.length; i++, columns=columns.more){
-			if (keyColumns[i]!=null){
-				try  {
-					Object value=columnBindings[i].adapter.parse(columns.text());
-					keyMap.put(keyColumns[i], value);
-				}
-				catch (Exception e){
-					exception(columns,e);
-				}
-			}
-		}
-		return dt.findMatching(keyMap);
+        Map<String, Object> keyMap = getMapFrom(row);
+		return actualDataTable.findMatching(keyMap);
 	}
-	private void addSurplusRows(Parse rows){
+
+    private Map<String, Object> getMapFrom(Parse row) {
+        Parse columns=row.parts;
+        Map<String,Object> keyMap=new HashMap<String,Object>();
+        for (int i=0; i<keyColumns.length; i++, columns=columns.more){
+            if (keyColumns[i]!=null){
+                try  {
+                    Object value=columnBindings[i].adapter.parse(columns.text());
+                    keyMap.put(keyColumns[i], value);
+                }
+                catch (Exception e){
+                    exception(columns,e);
+                }
+            }
+        }
+        return keyMap;
+    }
+
+    private void addSurplusRows(Parse rows){
 		Parse lastRow=rows;
-		for (DataRow dr: dt.getUnprocessedRows()){
+		for (DataRow dr: actualDataTable.getUnprocessedRows()){
 			Parse newRow=new Parse("tr",null,null,null);
 			lastRow.more=newRow;
 			lastRow=newRow;
 			try{
-				currentRow=dr; // for getting
+				currentActualDataRow =dr; // for getting
 				Parse firstCell=new Parse("td",
 						String.valueOf(columnBindings[0].adapter.invoke()),null,null);
 				newRow.parts=firstCell;

@@ -30,7 +30,7 @@ public class Query extends RowSetFixture {
 		this.isOrdered = isOrdered;
 	}
 
-	public DataTable getDataTable() throws SQLException {
+	public DataTable getActualDataTable() throws SQLException {
 		if (queryOrSymbol == null)
 			queryOrSymbol = args[0];
 		if (isSymbolGetter(queryOrSymbol))
