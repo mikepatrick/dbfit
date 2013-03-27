@@ -34,18 +34,9 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    public Object parse(String s) throws Exception {
 	    	return new ParseHelper(this.fixture,this.type).parse(s);
 	    }
-	}	
-	private int findColumn(String name) throws Exception{
-		//todo: implement non-key
-		String normalisedName=NameNormaliser.normaliseName(name);
-		for (int i=0; i< actualDataTable.getColumns().size(); i++){
-			String colName= actualDataTable.getColumns().get(i).getName();
-			if (normalisedName.equals(NameNormaliser.normaliseName(colName)))
-				return i;
-		}
-		throw new Exception("Unknown column "+normalisedName);
 	}
-	// if element not 0, fixture column -> result set column index
+
+    // if element not 0, fixture column -> result set column index
 	private String[] keyColumns;
 	protected void bind(Parse heads) {
 		try {
@@ -54,13 +45,13 @@ public abstract class RowSetFixture extends ColumnFixture {
 		     for (int i = 0; heads != null; i++, heads = heads.more) {
 	              String name=heads.text();
 	              columnBindings[i] = new SymbolAccessQueryBinding();
-	              int idx=findColumn(name);
-	              String columnName= actualDataTable.getColumns().get(idx).getName();
+                 DataColumn dataColumn = actualDataTable.getColumnNamed(name);
+                 String columnName= dataColumn.getName();
 	              if (! name.endsWith("?"))
 	            	  keyColumns[i]=columnName;
 	               columnBindings[i].adapter = new CurrentDataRowTypeAdapter(
 	                				columnName,
-	                				getJavaClassForColumn(actualDataTable.getColumns().get(idx))
+	                				getJavaClassForColumn(dataColumn)
 	                			);	          
 	         }
 		}
@@ -68,7 +59,8 @@ public abstract class RowSetFixture extends ColumnFixture {
 			exception(heads,sqle);
 		}
 	}
-	protected abstract DataTable getActualDataTable() throws SQLException;
+
+    protected abstract DataTable getActualDataTable() throws SQLException;
 	protected abstract boolean isOrdered();
 	public void doRows(Parse rows)
 	{

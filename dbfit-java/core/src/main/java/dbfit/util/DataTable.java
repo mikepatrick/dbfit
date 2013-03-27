@@ -40,4 +40,15 @@ public class DataTable{
 	public List<DataColumn> getColumns() {
 		return columns;
 	}
+
+    public DataColumn getColumnNamed(String name) throws Exception {
+        //todo: implement non-key
+        String normalisedName=NameNormaliser.normaliseName(name);
+        for (int i=0; i< getColumns().size(); i++){
+            String colName= getColumns().get(i).getName();
+            if (normalisedName.equals(NameNormaliser.normaliseName(colName)))
+                return getColumns().get(i);
+        }
+        throw new Exception("Unknown column "+normalisedName);
+    }
 }
