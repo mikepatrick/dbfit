@@ -26,7 +26,7 @@ public class DataTable{
 			if (!dr.isProcessed() && dr.matches(keyProperties)) return dr;
 		throw new NoMatchingRowFoundException();
 	}
-	public DataRow findFirstUnprocessedRow() throws NoMatchingRowFoundException{
+	public DataRow findNextUnprocessedRow() throws NoMatchingRowFoundException{
 		for (DataRow dr: rows)
 			if (!dr.isProcessed()) return dr;
 		throw new NoMatchingRowFoundException();

@@ -36,6 +36,7 @@ public abstract class RowSetFixture extends ColumnFixture {
 	    }
 	}
 
+    // this is part of the domain and doesn't belong here
     public static class ExpectedDataColumn {
         private String name;
 
@@ -73,9 +74,13 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
+    // this is part of the domain and doesn't belong here
     protected abstract DataTable getActualDataTable() throws SQLException;
-	protected abstract boolean isOrdered();
-	public void doRows(Parse rows)
+
+    // this is part of the domain and doesn't belong here
+    protected abstract boolean isOrdered();
+
+    public void doRows(Parse rows)
 	{
 		try{
 			actualDataTable = getActualDataTable();
@@ -89,11 +94,9 @@ public abstract class RowSetFixture extends ColumnFixture {
 	}
 
     public void doRow(Parse expectedDataRow) {
+        Map<String, Object> keyMap = getMapFrom(expectedDataRow);
         try {
-            if (isOrdered())
-                currentActualDataRow = actualDataTable.findFirstUnprocessedRow();
-            else
-                currentActualDataRow = findMatchingRow(expectedDataRow);
+            currentActualDataRow = findActualRowToCompare(keyMap);
             super.doRow(expectedDataRow);
             currentActualDataRow.markProcessed();
         } catch (NoMatchingRowFoundException e) {
@@ -102,10 +105,17 @@ public abstract class RowSetFixture extends ColumnFixture {
         }
     }
 
-	public DataRow findMatchingRow(Parse row) throws NoMatchingRowFoundException{
-        Map<String, Object> keyMap = getMapFrom(row);
-		return actualDataTable.findMatching(keyMap);
-	}
+    // this is part of the domain and doesn't belong here
+    private DataRow findActualRowToCompare(Map<String, Object> keyMap) throws NoMatchingRowFoundException {
+        DataRow actualRowToCompare;
+        if (isOrdered()) {
+            actualRowToCompare = actualDataTable.findNextUnprocessedRow();
+        }
+        else {
+            actualRowToCompare = actualDataTable.findMatching(keyMap);
+        }
+        return actualRowToCompare;
+    }
 
     private Map<String, Object> getMapFrom(Parse row) {
         Parse columns=row.parts;
@@ -150,8 +160,5 @@ public abstract class RowSetFixture extends ColumnFixture {
 		}
 	}
 
-    @SuppressWarnings("unchecked")
-    protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException {
-        return col.getJavaClassForColumn();
-    }
+    abstract protected Class getJavaClassForColumn(DataColumn col) throws ClassNotFoundException, SQLException;
 }
