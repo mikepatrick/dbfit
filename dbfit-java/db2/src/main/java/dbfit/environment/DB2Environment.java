@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import static dbfit.util.DbParameterAccessor.Direction;
 import static dbfit.util.DbParameterAccessor.Direction.*;
 
-@DatabaseEnvironment(name="DB2", driver="com.ibm.db2.jcc.DB2Driver")
+@DatabaseEnvironment(name="DB2", driver="com.ibm.as400.access.AS400JDBCDriver")
 public class DB2Environment extends AbstractDbEnvironment {
 
     public DB2Environment(String driverClassName) {
@@ -38,11 +38,11 @@ public class DB2Environment extends AbstractDbEnvironment {
     }
 
     protected String getConnectionString(String dataSource) {
-        return "jdbc:db2://" + dataSource;
+        return "jdbc:as400://" + dataSource;
     }
 
     protected String getConnectionString(String dataSource, String database) {
-        return "jdbc:db2://" + dataSource + "/" + database;
+        return "jdbc:as400://" + dataSource + "/" + database;
     }
 
     public Map<String, DbParameterAccessor> getAllColumns(String tableOrViewName)
