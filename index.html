@@ -1,63 +1,78 @@
----
-layout: page
-title: "DbFit: Test-driven database development"
-description: Test-driven database development. Write readable, easy-to-maintain unit and integration tests for your database code.
-hide_header: true
-nav_bar_name: home
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-      <div class="jumbotron">
-        <h1>DbFit</h1>
-        <p class="lead">Test-driven database development. Write readable, easy-to-maintain unit and integration tests for your database code.</p>
-        <p>
-          <a class="btn btn-large btn-success" href="https://s3.amazonaws.com/dbfit/dbfit-complete-{{ site.dbfit_version }}.zip" onclick="recordOutboundLink(this, 'Software', '{{ site.dbfit_version }}', 'Landing page');return false;">Download DbFit</a>
-          <a class="btn btn-large btn-primary" href="/dbfit/docs/" onclick="recordOutboundLink(this, 'Documentation', 'Documentation Index', 'Landing page');return false;">Documentation</a>
-        </p>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-        <ul class="masthead-links">
-          <li><a href="https://github.com/benilovj/dbfit">GitHub project</a></li>
-          <li><a href="http://groups.google.com/group/dbfit" onclick="recordOutboundLink(this, 'Outbound links', 'Forum', 'Landing page');return false;">Forums</a></li>
-          <li><a href="https://github.com/benilovj/dbfit/issues">Bugs &amp; suggestions</a></li>
-          <li>Version {{ site.dbfit_version }}</li>
-        </ul>
+    <title>CdsDbfit by mikepatrick</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>CdsDbfit</h1>
+        <h2>DbFit is a database testing framework that supports easy test-driven development of your database code.</h2>
+        <a href="https://github.com/mikepatrick/dbfit" class="button"><small>View project on</small>GitHub</a>
       </div>
+    </header>
 
-      <div class="docs-social">
-          <ul class="docs-social-buttons">
-            <li>
-              <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=benilovj&repo=dbfit&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
-            </li>
-            <li>
-              <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=benilovj&repo=dbfit&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="102px" height="20px"></iframe>
-            </li>
-            <li class="follow-btn">
-              <a href="https://twitter.com/bigdatatesting" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @bigdatatesting</a>
-            </li>
-          </ul>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h3>
+<a name="dbfit-enabled-for-the-iseries" class="anchor" href="#dbfit-enabled-for-the-iseries"><span class="octicon octicon-link"></span></a>DbFit Enabled for the iSeries.</h3>
+
+<p>DbFit is a framework that allows us to blend SQL verifications with our REST response verifications when testing with RestFixture.  We use RestFixture to issue the REST request and verify the XML response with XPATH expressions and very simple SQL queries.  DbFit allows for more robust queries that are easier to write and to read.  Using this approach, we focus on the REST response in CdsRestFixture, and we focus on verifying the client database using DbFit.</p>
+
+<p>This project was forked from <a href="https://github.com/benilovj" class="user-mention">@benilovj</a>.</p>
+
+<h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+
+<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+
+<h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/mikepatrick/dbfit/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/mikepatrick/dbfit/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/mikepatrick/dbfit"></a> is maintained by <a href="https://github.com/mikepatrick">mikepatrick</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
+    </div>
 
-      <hr>
-
-      <div class="row-fluid marketing">
-        <div class="span6">
-          <h2>The complete solution</h2>
-          <p>Write, manage and execute tests directly from the browser.</p>
-
-          <h2>Free and open source</h2>
-          <p>Released under the GPL license, source available on <a href="https://github.com/benilovj/dbfit">GitHub</a>.</p>
-
-          <h2>Rock-solid framework</h2>
-          <p>DbFit is written on top of <a href="http://fitnesse.org/">FitNesse</a>, a mature, fully-featured framework with a large community.</p>
-        </div>
-
-        <div class="span6">
-          <h2>Supports all major DBs</h2>
-          <p>Out-of-the-box support for Oracle, SQL Server, MySQL, DB2, PostgreSQL, HSQLDB and Derby.</p>
-
-          <h2>Readable tests</h2>
-          <p>DbFit tests are written using tables, making them more readable than xUnit-style tests.</p>
-
-          <h2>Automatable</h2>
-          <p>Run tests from the commandline, any Java IDE or CI build tool.</p>
-        </div>
-      </div>
+  
+  </body>
+</html>
